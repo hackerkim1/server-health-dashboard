@@ -1,0 +1,58 @@
+:root {
+  --bg-deep: #030910;
+  --bg-panel: rgb(9 22 38 / 82%);
+  --bg-panel-soft: rgb(10 26 45 / 60%);
+  --border-soft: rgb(64 168 222 / 22%);
+  --border-strong: rgb(88 202 255 / 45%);
+  --cyan: #45d7ff;
+  --cyan-soft: #8be8ff;
+  --blue: #2f7cff;
+  --green: #35e08c;
+  --amber: #ffb020;
+  --red: #ff4d5e;
+  --purple: #8b7cff;
+  --text: #e8f4ff;
+  --muted: #6f8aab;
+  --font-num: 'DIN Alternate', 'Segoe UI', 'Microsoft YaHei', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family:
+    'Segoe UI',
+    'PingFang SC',
+    'Microsoft YaHei',
+    sans-serif;
+  color: var(--text);
+  background: var(--bg-deep);
+}
+
+::selection {
+  background: rgb(69 215 255 / 30%);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(69 215 255 / 35%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
