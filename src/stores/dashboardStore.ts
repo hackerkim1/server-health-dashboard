@@ -1,27 +1,39 @@
 import { defineStore } from 'pinia'
 
-import rawData from '../data/dashboardData.json'
 import type { DashboardData } from '../types/dashboard'
 
-const dashboardData = rawData as DashboardData
+const API_URL = '/api/dashboard'
+const POLL_INTERVAL_MS = 15000
 
 export const useDashboardStore = defineStore('dashboard', {
   state: () => ({
     data: null as DashboardData | null,
     error: '' as string,
+    loading: false,
+    lastFetchedAt: null as Date | null,
     now: new Date(),
     clockTimer: 0 as number,
+    pollTimer: 0 as number,
   }),
   actions: {
-    async loadDashboard() {
+    async fetchDashboard() {
+      this.loading = true
       try {
-        // 数据来自离线 tsar 采集日志的聚合结果，此处模拟一次异步加载
-        await new Promise((resolve) => setTimeout(resolve, 120))
-        this.data = dashboardData
-      } catch {
-        this.error = '监测数据加载失败'
+        const res = await fetch(API_URL)
+        if (!res.ok) throw new Error(`接口返回 ${res.status}`)
+        this.data = (await res.json()) as DashboardData
+        this.lastFetchedAt = new Date()
+        this.error = ''
+      } catch (err) {
+        this.error = err instanceof Error ? `监测数据加载失败：${err.message}` : '监测数据加载失败'
+      } finally {
+        this.loading = false
       }
+    },
+    async loadDashboard() {
+      await this.fetchDashboard()
       this.startClock()
+      this.startPolling()
     },
     startClock() {
       if (this.clockTimer) return
@@ -30,10 +42,20 @@ export const useDashboardStore = defineStore('dashboard', {
         this.now = new Date()
       }, 1000)
     },
-    stopClock() {
+    startPolling() {
+      if (this.pollTimer) return
+      this.pollTimer = window.setInterval(() => {
+        void this.fetchDashboard()
+      }, POLL_INTERVAL_MS)
+    },
+    dispose() {
       if (this.clockTimer) {
         window.clearInterval(this.clockTimer)
         this.clockTimer = 0
+      }
+      if (this.pollTimer) {
+        window.clearInterval(this.pollTimer)
+        this.pollTimer = 0
       }
     },
   },

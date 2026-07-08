@@ -11,6 +11,10 @@
     </div>
 
     <div class="screen-header__side screen-header__side--right">
+      <span class="screen-header__live" :class="{ 'screen-header__live--loading': loading }">
+        <i class="screen-header__live-dot" />
+        {{ loading ? '数据同步中' : 'LIVE' }} · {{ lastFetchedText }}
+      </span>
       <span class="screen-header__meta">{{ clockText }}</span>
       <span class="screen-header__flare" />
     </div>
@@ -22,10 +26,11 @@ import { computed } from 'vue'
 
 import { formatClock, formatDate } from '../utils/format'
 
-const props = defineProps<{ now: Date }>()
+const props = defineProps<{ now: Date; lastFetchedAt: Date | null; loading: boolean }>()
 
 const clockText = computed(() => formatClock(props.now))
 const dateText = computed(() => formatDate(props.now))
+const lastFetchedText = computed(() => (props.lastFetchedAt ? `${formatClock(props.lastFetchedAt)} 更新` : '等待接入数据库'))
 </script>
 
 <style scoped>
@@ -93,5 +98,47 @@ const dateText = computed(() => formatDate(props.now))
 
 .screen-header__side--right .screen-header__flare {
   background: linear-gradient(90deg, var(--cyan), transparent);
+}
+
+.screen-header__live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family:
+    'Segoe UI',
+    'PingFang SC',
+    sans-serif;
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+
+.screen-header__live-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--green);
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+.screen-header__live--loading {
+  color: var(--amber);
+}
+
+.screen-header__live--loading .screen-header__live-dot {
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
 }
 </style>

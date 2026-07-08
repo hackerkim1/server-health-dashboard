@@ -32,7 +32,7 @@ const { render } = useEcharts(el, () => ({
     data: props.data.map((d) => d.time),
     boundaryGap: false,
     axisLine: { lineStyle: { color: 'rgb(111 138 171 / 35%)' } },
-    axisLabel: { color: '#6f8aab', fontSize: 10, interval: 23 },
+    axisLabel: { color: '#6f8aab', fontSize: 10, interval: Math.max(0, Math.floor(props.data.length / 7)) },
     axisTick: { show: false },
   },
   yAxis: {

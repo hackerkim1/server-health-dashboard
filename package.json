@@ -4,15 +4,20 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build:data": "node scripts/build-data.mjs",
-    "predev": "npm run build:data",
-    "prebuild": "npm run build:data",
-    "dev": "vite",
+    "db:load": "node scripts/load-mysql.mjs",
+    "server": "node server/index.mjs",
+    "dev:client": "vite",
+    "dev:server": "node --watch server/index.mjs",
+    "dev": "concurrently -n client,server -c cyan,magenta \"npm:dev:client\" \"npm:dev:server\"",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "echarts": "^6.1.0",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.6",
     "pinia": "^3.0.4",
     "vue": "^3.5.39"
   },
@@ -20,6 +25,7 @@
     "@types/node": "^24.13.2",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vue/tsconfig": "^0.9.1",
+    "concurrently": "^10.0.3",
     "typescript": "~6.0.2",
     "vite": "^8.1.1",
     "vue-tsc": "^3.3.5"

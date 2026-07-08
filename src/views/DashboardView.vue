@@ -1,7 +1,7 @@
 <template>
   <BigScreenLayout>
     <main class="dashboard-view">
-      <ScreenHeader :now="dashboard.now" />
+      <ScreenHeader :now="dashboard.now" :last-fetched-at="dashboard.lastFetchedAt" :loading="dashboard.loading" />
 
       <section v-if="dashboard.data" class="dashboard-view__content">
         <div class="dashboard-view__metrics">
@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted } from 'vue'
 
 import AlertFeed from '../components/AlertFeed.vue'
 import BasePanel from '../components/BasePanel.vue'
@@ -110,6 +110,9 @@ const dashboard = useDashboardStore()
 
 onMounted(() => {
   void dashboard.loadDashboard()
+})
+onBeforeUnmount(() => {
+  dashboard.dispose()
 })
 
 const data = computed(() => dashboard.data!)
