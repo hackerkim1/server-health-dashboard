@@ -1,5 +1,7 @@
 # 服务器运行状况监测大屏（ServerHealthDashboard）
 
+![预览截图](docs/screenshot.png)
+
 面向运维负责人视角的服务器运行状况实时监测可视化大屏。原始 tsar 采集日志经 ETL 加工后存入 **MySQL**，一个内置的模拟采集器持续写入新的采集点，**Express API** 实时查询聚合，前端 **Vue 3 + TypeScript + ECharts + Pinia** 轮询展示——不是回放静态快照，数据库里的数值在持续变化。
 
 ```
